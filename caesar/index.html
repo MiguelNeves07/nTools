@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Caesar Cipher - nTools</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../">Home</a>
+    <a href="../caesar">Caesar Cipher</a>
+    <a href="../binary">Binary Converter</a>
+    <a href="../morse">Morse Code</a>
+    <a href="../passgen">Password Generator</a>
+    <a href="../timer">Timer</a>
+  </nav>
+
+  <main>
+    <h1>Caesar Cipher</h1>
+    <p>Encrypt or decrypt your text using a classic shift rotation technique.</p>
+
+    <label for="inputText">Input Text:</label>
+    <textarea id="inputText" placeholder="Enter text here..."></textarea>
+
+    <div class="form-group">
+      <label for="shiftKey">Shift Key (Number):</label>
+      <input type="number" id="shiftKey" value="3" min="1" max="25" style="width: 100px;">
+    </div>
+
+    <div>
+      <button id="encryptBtn">Encrypt</button>
+      <button id="decryptBtn">Decrypt</button>
+    </div>
+
+    <label for="outputText">Output:</label>
+    <textarea id="outputText" readonly placeholder="Output will appear here..."></textarea>
+  </main>
+
+  <script>
+    const inputEl = document.getElementById('inputText');
+    const shiftEl = document.getElementById('shiftKey');
+    const outputEl = document.getElementById('outputText');
+
+    function caesarCipher(text, shift, decrypt = false) {
+      if (decrypt) {
+        shift = (26 - (shift % 26)) % 26;
+      }
+      return text.split('').map(char => {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          return String.fromCharCode(((code - 65 + shift) % 26) + 65);
+        }
+        if (code >= 97 && code <= 122) {
+          return String.fromCharCode(((code - 97 + shift) % 26) + 97);
+        }
+        return char;
+      }).join('');
+    }
+
+    document.getElementById('encryptBtn').addEventListener('click', () => {
+      const shift = parseInt(shiftEl.value, 10) || 0;
+      outputEl.value = caesarCipher(inputEl.value, shift, false);
+    });
+
+    document.getElementById('decryptBtn').addEventListener('click', () => {
+      const shift = parseInt(shiftEl.value, 10) || 0;
+      outputEl.value = caesarCipher(inputEl.value, shift, true);
+    });
+  </script>
+
+</body>
+</html>

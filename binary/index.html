@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Binary Converter - nTools</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../">Home</a>
+    <a href="../caesar">Caesar Cipher</a>
+    <a href="../binary">Binary Converter</a>
+    <a href="../morse">Morse Code</a>
+    <a href="../passgen">Password Generator</a>
+    <a href="../timer">Timer</a>
+  </nav>
+
+  <main>
+    <h1>Binary Converter</h1>
+    <p>Convert your regular text into binary sequences (0s and 1s) and decode back to human-readable strings.</p>
+
+    <label for="inputText">Input:</label>
+    <textarea id="inputText" placeholder="Enter text or binary (e.g. 01001000 01100101 01101100 01101100 01101111)..."></textarea>
+
+    <div>
+      <button id="textToBinaryBtn">Text to Binary</button>
+      <button id="binaryToTextBtn">Binary to Text</button>
+    </div>
+
+    <label for="outputText">Output:</label>
+    <textarea id="outputText" readonly placeholder="Output will appear here..."></textarea>
+  </main>
+
+  <script>
+    const inputEl = document.getElementById('inputText');
+    const outputEl = document.getElementById('outputText');
+
+    function textToBinary(text) {
+      return text.split('').map(char => {
+        const bin = char.charCodeAt(0).toString(2);
+        return bin.padStart(8, '0');
+      }).join(' ');
+    }
+
+    function binaryToText(binary) {
+      const cleanBinary = binary.trim().replace(/[^01\s]/g, '');
+      if (!cleanBinary) return '';
+      
+      const bins = cleanBinary.split(/\s+/);
+      try {
+        return bins.map(bin => {
+          return String.fromCharCode(parseInt(bin, 2));
+        }).join('');
+      } catch (err) {
+        return "Error parsing binary. Please check format.";
+      }
+    }
+
+    document.getElementById('textToBinaryBtn').addEventListener('click', () => {
+      outputEl.value = textToBinary(inputEl.value);
+    });
+
+    document.getElementById('binaryToTextBtn').addEventListener('click', () => {
+      outputEl.value = binaryToText(inputEl.value);
+    });
+  </script>
+
+</body>
+</html>

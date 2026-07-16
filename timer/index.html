@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch & Timer - nTools</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../">Home</a>
+    <a href="../caesar">Caesar Cipher</a>
+    <a href="../binary">Binary Converter</a>
+    <a href="../morse">Morse Code</a>
+    <a href="../passgen">Password Generator</a>
+    <a href="../timer">Timer</a>
+  </nav>
+
+  <main>
+    <h1>Stopwatch / Timer</h1>
+    <p>A simple high-precision timer. Run, pause, and reset as needed.</p>
+
+    <div class="timer-display" id="timerDisplay">00:00:00.00</div>
+
+    <div>
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn" disabled>Pause</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+  </main>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval = null;
+
+    const displayEl = document.getElementById('timerDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function formatTime(ms) {
+      let milliseconds = Math.floor((ms % 1000) / 10);
+      let seconds = Math.floor((ms / 1000) % 60);
+      let minutes = Math.floor((ms / (1000 * 60)) % 60);
+      let hours = Math.floor(ms / (1000 * 60 * 60));
+
+      const pad = (num, size = 2) => String(num).padStart(size, '0');
+
+      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}.${pad(milliseconds)}`;
+    }
+
+    function updateTimer() {
+      const now = performance.now();
+      const currentElapsed = elapsedTime + (now - startTime);
+      displayEl.textContent = formatTime(currentElapsed);
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (!timerInterval) {
+        startTime = performance.now();
+        timerInterval = setInterval(updateTimer, 10);
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+      }
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (timerInterval) {
+        elapsedTime += performance.now() - startTime;
+        clearInterval(timerInterval);
+        timerInterval = null;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      startTime = 0;
+      elapsedTime = 0;
+      displayEl.textContent = "00:00:00.00";
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Generator - nTools</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../">Home</a>
+    <a href="../caesar">Caesar Cipher</a>
+    <a href="../binary">Binary Converter</a>
+    <a href="../morse">Morse Code</a>
+    <a href="../passgen">Password Generator</a>
+    <a href="../timer">Timer</a>
+  </nav>
+
+  <main>
+    <h1>Password Generator</h1>
+    <p>Locally generate secure cryptographic passwords instantly. None of your data is sent to a server.</p>
+
+    <div class="form-group">
+      <label for="passwordDisplay">Generated Password:</label>
+      <input type="text" id="passwordDisplay" readonly placeholder="Click Generate to begin">
+    </div>
+
+    <div class="form-group">
+      <label for="lengthSlider">Length: <strong id="lengthValue">16</strong></label>
+      <input type="range" id="lengthSlider" min="6" max="32" value="16" style="width: 100%; max-width: 300px; display: block; margin: 8px 0;">
+    </div>
+
+    <div class="checkbox-group">
+      <input type="checkbox" id="includeUpper" checked>
+      <label for="includeUpper">Include Uppercase Letters (A-Z)</label>
+    </div>
+
+    <div class="checkbox-group">
+      <input type="checkbox" id="includeLower" checked>
+      <label for="includeLower">Include Lowercase Letters (a-z)</label>
+    </div>
+
+    <div class="checkbox-group">
+      <input type="checkbox" id="includeNumbers" checked>
+      <label for="includeNumbers">Include Numbers (0-9)</label>
+    </div>
+
+    <div class="checkbox-group">
+      <input type="checkbox" id="includeSymbols" checked>
+      <label for="includeSymbols">Include Symbols (!@#$%^&*()_+-=[{}])</label>
+    </div>
+
+    <button id="generateBtn">Generate</button>
+  </main>
+
+  <script>
+    const lengthSlider = document.getElementById('lengthSlider');
+    const lengthValue = document.getElementById('lengthValue');
+    const displayEl = document.getElementById('passwordDisplay');
+
+    const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lowerChars = "abcdefghijklmnopqrstuvwxyz";
+    const numberChars = "0123456789";
+    const symbolChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+    lengthSlider.addEventListener('input', (e) => {
+      lengthValue.textContent = e.target.value;
+    });
+
+    function generateSecurePassword() {
+      const length = parseInt(lengthSlider.value, 10);
+      let allowedPool = "";
+      
+      if (document.getElementById('includeUpper').checked) allowedPool += upperChars;
+      if (document.getElementById('includeLower').checked) allowedPool += lowerChars;
+      if (document.getElementById('includeNumbers').checked) allowedPool += numberChars;
+      if (document.getElementById('includeSymbols').checked) allowedPool += symbolChars;
+
+      if (!allowedPool) {
+        alert("Please select at least one character set!");
+        return;
+      }
+
+      let password = "";
+      const randomValues = new Uint32Array(length);
+      window.crypto.getRandomValues(randomValues);
+
+      for (let i = 0; i < length; i++) {
+        const randomIndex = randomValues[i] % allowedPool.length;
+        password += allowedPool.charAt(randomIndex);
+      }
+
+      displayEl.value = password;
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', generateSecurePassword);
+    window.onload = generateSecurePassword;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Morse Code - nTools</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="../">Home</a>
+    <a href="../caesar">Caesar Cipher</a>
+    <a href="../binary">Binary Converter</a>
+    <a href="../morse">Morse Code</a>
+    <a href="../passgen">Password Generator</a>
+    <a href="../timer">Timer</a>
+  </nav>
+
+  <main>
+    <h1>Morse Code Converter</h1>
+    <p>Convert letters and numbers into standard Morse signal strings (dots and dashes), or translate Morse back to text.</p>
+
+    <label for="inputText">Input:</label>
+    <textarea id="inputText" placeholder="Enter English text or Morse code (using dots . and dashes -)..."></textarea>
+
+    <div>
+      <button id="textToMorseBtn">Text to Morse</button>
+      <button id="morseToTextBtn">Morse to Text</button>
+    </div>
+
+    <label for="outputText">Output:</label>
+    <textarea id="outputText" readonly placeholder="Output will appear here..."></textarea>
+  </main>
+
+  <script>
+    const morseMap = {
+      'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+      'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+      'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+      'Y': '-.--', 'Z': '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
+      '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----', ' ': '/'
+    };
+
+    const reverseMorseMap = Object.fromEntries(
+      Object.entries(morseMap).map(([key, val]) => [val, key])
+    );
+
+    const inputEl = document.getElementById('inputText');
+    const outputEl = document.getElementById('outputText');
+
+    function textToMorse(text) {
+      return text.toUpperCase().split('').map(char => {
+        return morseMap[char] || '';
+      }).filter(Boolean).join(' ');
+    }
+
+    function morseToText(morse) {
+      return morse.trim().split(/\s+/).map(code => {
+        if (code === '/') return ' ';
+        return reverseMorseMap[code] || '?';
+      }).join('');
+    }
+
+    document.getElementById('textToMorseBtn').addEventListener('click', () => {
+      outputEl.value = textToMorse(inputEl.value);
+    });
+
+    document.getElementById('morseToTextBtn').addEventListener('click', () => {
+      outputEl.value = morseToText(inputEl.value);
+    });
+  </script>
+
+</body>
+</html>
